@@ -2,20 +2,21 @@
 
 # The following 2 arrays list the ip address of different respectively
 #
-listA="52.90.241.168 52.91.199.130 52.87.250.5"
-listB="54.173.210.29 54.152.8.117 54.86.173.53"
+listA="54.236.146.136 52.90.89.153 54.152.88.205"
+listB="52.90.56.81 54.236.100.33 54.209.18.185"
+ssh_key_file="cityu_cloud_computing_key.pem"
 
 function install_netperf
 {
 	for server in $(echo "$1 $2");do
-		ssh -i cityu_cloud_computing_key.pem ubuntu@$server "sudo apt-get update && sudo apt-get install netperf -y"
+		ssh -i $ssh_key_file ubuntu@$server "sudo apt-get update && sudo apt-get install netperf -y"
 	done
 }
 
 function install_iperf
 {
 	for server in $(echo "$1 $2");do
-                ssh -i cityu_cloud_computing_key.pem ubuntu@$server "sudo apt-get update && sudo apt-get install iperf -y"
+                ssh -i $ssh_key_file ubuntu@$server "sudo apt-get update && sudo apt-get install iperf -y"
         done
 }
 
@@ -23,30 +24,30 @@ function kill_netserver
 {
 	# $1 - server ip address
 	# $2 - server internal ip address
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$1 "sudo pkill netserver" && sleep 5
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$1 "sudo netserver -L $2"
+	ssh -i $ssh_key_file ubuntu@$1 "sudo pkill netserver" && sleep 5
+	ssh -i $ssh_key_file ubuntu@$1 "sudo netserver -L $2"
 }
 
 function kill_iserver
 {
 	# $1 - server ip address
 	# $2 - server internal ip address
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$server "sudo pkill iperf" && sleep 5
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$server "sudo iperf -s -w 256K"
+	ssh -i $ssh_key_file ubuntu@$server "sudo pkill iperf" && sleep 5
+	ssh -i $ssh_key_file ubuntu@$server "sudo iperf -s -w 256K"
 }
 
 function netperf_start
 {
 	# $1 - client ip address
 	# $2 - target server ip address
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$1 "sudo netperf -H $2"
+	ssh -i $ssh_key_file ubuntu@$1 "sudo netperf -H $2"
 }
 
 function iperf_start
 {
 	# $1 - client ip address
 	# $2 - target server ip address
-	ssh -i cityu_cloud_computing_key.pem ubuntu@$1 "sudo iperf -c $2 -w 256K"
+	ssh -i $ssh_key_file ubuntu@$1 "sudo iperf -c $2 -w 256K"
 }
 
 function speed_test
@@ -55,11 +56,11 @@ function speed_test
 	# $2 - servers in list B
 	# $3 - operations
 	for server in $1;do
-		server_internal_ip="$(ssh -i cityu_cloud_computing_key.pem ubuntu@$server "sudo ip addr show eth0 | egrep 'inet ' | xargs | cut -d ' ' -f 2 | cut -d '/' -f 1")"
+		server_internal_ip="$(ssh -i $ssh_key_file ubuntu@$server "sudo ip addr show eth0 | egrep 'inet ' | xargs | cut -d ' ' -f 2 | cut -d '/' -f 1")"
 		[ "$3" = "net" ] && kill_netserver "$server" "$server_internal_ip" || kill_iserver "$server" "$server_internal_ip"
 
 		for client in $2;do
-			client_internal_ip="$(ssh -i cityu_cloud_computing_key.pem ubuntu@$client "sudo ip addr show eth0 | egrep 'inet ' | xargs | cut -d ' ' -f 2 | cut -d '/' -f 1")"
+			client_internal_ip="$(ssh -i $ssh_key_file ubuntu@$client "sudo ip addr show eth0 | egrep 'inet ' | xargs | cut -d ' ' -f 2 | cut -d '/' -f 1")"
 			echo -e "\nTesting connection speed:\nServer: $server ($server_internal_ip)\nClient: $client ($client_internal_ip)"
 			[ "$3" = "net" ] && netperf_start "$server" "$server_internal_ip" || iperf_start "$server" "$server_internal_ip"
 		done

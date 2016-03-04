@@ -33,7 +33,7 @@ function kill_iserver
 	# $1 - server ip address
 	# $2 - server internal ip address
 	ssh -i $ssh_key_file ubuntu@$server "sudo pkill iperf" && sleep 5
-	ssh -i $ssh_key_file ubuntu@$server "sudo iperf -s -w 256K"
+	ssh -i $ssh_key_file ubuntu@$server "sudo nohup iperf -s -w 256K > /dev/null 2>&1 &"
 }
 
 function netperf_start

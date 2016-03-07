@@ -2,8 +2,8 @@
 
 # The following 2 arrays list the ip address of different respectively
 #
-listA="54.236.146.136 52.90.89.153 54.152.88.205"
-listB="52.90.56.81 54.236.100.33 54.209.18.185"
+listA="54.152.77.231 52.23.159.154 52.87.246.91"
+listB="52.90.253.13 52.23.211.236 52.90.161.165"
 ssh_key_file="cityu_cloud_computing_key.pem"
 
 function install_netperf
@@ -62,7 +62,7 @@ function speed_test
 		for client in $2;do
 			client_internal_ip="$(ssh -i $ssh_key_file ubuntu@$client "sudo ip addr show eth0 | egrep 'inet ' | xargs | cut -d ' ' -f 2 | cut -d '/' -f 1")"
 			echo -e "\nTesting connection speed:\nServer: $server ($server_internal_ip)\nClient: $client ($client_internal_ip)"
-			[ "$3" = "net" ] && netperf_start "$server" "$server_internal_ip" || iperf_start "$server" "$server_internal_ip"
+			[ "$3" = "net" ] && netperf_start "$client" "$server_internal_ip" || iperf_start "$client" "$server_internal_ip"
 		done
 	
 	done

@@ -3,12 +3,13 @@
 #include <string.h>
 #include <openssl/evp.h>
 
+#define HASHLEN 3
+
 const EVP_MD *md;
 
 void get_digest(unsigned char* md_value, char* str)
 {
 	EVP_MD_CTX *mdctx;
-	//unsigned char* md_value = malloc(EVP_MAX_MD_SIZE * sizeof(char));
 	int md_len, i;
 
 	mdctx = EVP_MD_CTX_create();
@@ -16,8 +17,6 @@ void get_digest(unsigned char* md_value, char* str)
 	EVP_DigestUpdate(mdctx, str, strlen(str));
 	EVP_DigestFinal_ex(mdctx, md_value, &md_len);
 	EVP_MD_CTX_destroy(mdctx);
-
-	//return md_value;
 }
 
 void get_random_string(char* str, size_t size)
@@ -41,11 +40,11 @@ void print_summary(char* input_string, char* rand_string, unsigned char* ori_has
 	fprintf(stdout, "|	The input string: %s\n", input_string);
 	fprintf(stdout, "|	The random string: %s\n", rand_string);
 	fprintf(stdout, "|	The hash of input string: ");
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < HASHLEN; i++)
 		fprintf(stdout, "%02x", ori_hash[i]);
 	fprintf(stdout, "\n");
 	fprintf(stdout, "|	The hash of random string: ");
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < HASHLEN; i++)
                 fprintf(stdout, "%02x", found_hash[i]);
         fprintf(stdout, "\n");
 	fprintf(stdout, "----------------------------------------------------------------\n");
@@ -75,11 +74,11 @@ int main(int argc, char** argv)
 	}
 	
 	unsigned char temp_val[EVP_MAX_MD_SIZE] = "";
-	unsigned char hash_val[3] = "";
+	unsigned char hash_val[HASHLEN] = "";
 
 	get_digest(temp_val, input_string);
-	strncpy(hash_val, temp_val, 3);
-	hash_val[3] = '\0';
+	strncpy(hash_val, temp_val, HASHLEN);
+	hash_val[HASHLEN] = '\0';
 	EVP_cleanup();
 
 	int len = strlen(input_string);
@@ -90,13 +89,13 @@ int main(int argc, char** argv)
 		get_random_string(ran_string, len);
 
 		unsigned char temp_arr[EVP_MAX_MD_SIZE] = "";
-		unsigned char hash_temp[3] = "";
+		unsigned char hash_temp[HASHLEN] = "";
 
 		get_digest(temp_arr, ran_string);
-		strncpy(hash_temp, temp_arr, 3);
-		hash_temp[3] = '\0';
+		strncpy(hash_temp, temp_arr, HASHLEN);
+		hash_temp[HASHLEN] = '\0';
 
-		if (strcmp(hash_val, hash_temp) == 0){
+		if (strncmp(hash_val, hash_temp, HASHLEN) == 0){
 			print_summary(input_string, ran_string, hash_val, hash_temp, count);
 			break;
 		}

@@ -35,19 +35,17 @@ void print_summary(char* input_string, char* rand_string, unsigned char* ori_has
 {
 	int i;
 
-	fprintf(stdout, "----------------------------------------------------------------\n");
-	fprintf(stdout, "|	The %d attempts.\n", count);
-	fprintf(stdout, "|	The input string: %s\n", input_string);
-	fprintf(stdout, "|	The random string: %s\n", rand_string);
-	fprintf(stdout, "|	The hash of input string: ");
+	fprintf(stdout, "The %d attempts.\n", count);
+	fprintf(stdout, "The input string: %s\n", input_string);
+	fprintf(stdout, "The random string: %s\n", rand_string);
+	fprintf(stdout, "The hash of input string: ");
 	for (i = 0; i < HASHLEN; i++)
 		fprintf(stdout, "%02x", ori_hash[i]);
 	fprintf(stdout, "\n");
-	fprintf(stdout, "|	The hash of random string: ");
+	fprintf(stdout, "The hash of random string: ");
 	for (i = 0; i < HASHLEN; i++)
                 fprintf(stdout, "%02x", found_hash[i]);
         fprintf(stdout, "\n");
-	fprintf(stdout, "----------------------------------------------------------------\n");
 }
 
 int main(int argc, char** argv)
@@ -60,8 +58,8 @@ int main(int argc, char** argv)
 
 	OpenSSL_add_all_digests();
 
-	char* input_string = argv[1];
-	md = EVP_get_digestbyname(argv[2]);
+	char* input_string = argv[2];
+	md = EVP_get_digestbyname(argv[1]);
 
 	if (strlen(input_string) > 5){
 		fprintf(stderr, "Error: Please enter a string that is shorter than 5 values. Otherwises, this program will run forever.\n");
@@ -69,7 +67,7 @@ int main(int argc, char** argv)
 	}
 
 	if (!md){
-		fprintf(stderr, "Unknown message digest %s\n", argv[2]);
+		fprintf(stderr, "Unknown message digest %s\n", argv[1]);
 		exit(1);
 	}
 	

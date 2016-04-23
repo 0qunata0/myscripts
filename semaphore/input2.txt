@@ -1,0 +1,39 @@
+M 8
+Td 5
+Tw 5
+Tb 3
+Tin 1
+Tout 1
+Company1 balance $100
+Company2 balance $1000
+
+Time 0: Employee 1 Company1; check balance 
+Time 0: Employee 2 Company1; check balance
+Time 0: Employee 3 Company1; withdrawal $100
+Time 1: Employee 4 Company2; deposit $2000
+Time 1: Employee 5 Company1; withdrawal $100
+Time 3: Employee 6 Company1; deposit $3000
+Time 3: Employee 7 Company2; withdrawal $1500
+Time 3: Employee 8 Company2; check balance
+Time 4: Employee 9 Company1; check balance
+Time 4: Employee 10 Company2; withdrawal $1000
+Time 5: Employee 11 Company2; check balance
+Time 6: Employee 12 Company2; deposit $500
+Time 6: Employee 13 Company1; withdrawal $1000
+Time 8: Employee 14 Company1; check balance
+Time 9: Employee 15 Company2; withdrawal $3000
+Time 9: Employee 16 Company2; check balance
+Time 9: Employee 17 Company1; check balance
+Time 11: Employee 18 Company2; deposit $3500
+Time 12: Employee 19 Company1; check balance
+Time 12: Employee 20 Company2; check balance
+Time 14: Employee 21 Company2; check balance
+Time 14: Employee 22 Company2; deposit $1500
+Time 16: Employee 23 Company1; withdrawal $1000
+Time 17: Employee 24 Company1; deposit $1500
+Time 19: Employee 25 Company2; withdrawal $1000
+Time 19: Employee 26 Company2; withdrawal $1000
+Time 19: Employee 27 Company1; withdrawal $200
+Time 20: Employee 28 Company2; deposit $2000
+Time 21: Employee 29 Company1; check balance
+Time 23: Employee 30 Company2; check balance

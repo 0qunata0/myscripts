@@ -13,6 +13,7 @@ typedef struct
 	int luggage; // 0 to represent Y, 1 to represent N and 2 to represent E
 } tag;
 
+int total_num_of_passengers = 0;
 tag collection_box[MAX_ROW_NUM * MAX_COL_NUM];
 pthread_mutex_t ticket_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -22,6 +23,11 @@ void create_a_tag(int col, int row)
 	collection_box[count].col_num = col;
 	collection_box[count].row_num = row;
 	collection_box[count++].luggage = 2;
+}
+
+void* wait_for_passenger(void* passenger)
+{
+	
 }
 
 void* ticketing_machine(void *have_luggage)

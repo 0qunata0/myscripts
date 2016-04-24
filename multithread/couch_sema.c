@@ -1,19 +1,23 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <iostream>
+#include <cstdlib>
 #include <pthread.h>
+#include <unistd.h>
+#include <time.h>
+#include <semaphore.h>
 
 #define MAX_ROW_NUM 4
 #define MAX_COL_NUM 9
+
+using namespace std;
 
 typedef struct
 {
 	int row_num;
 	int col_num;
-	int luggage; // 0 to represent Y, 1 to represent N and 2 to represent E
+	int luggage; // 0 to represent Y, 1 to represent N 
 } tag;
 
-set_t mutex;
+sem_t mutex;
 int total_num_of_passengers_now = 0;
 tag collection_box[MAX_ROW_NUM * MAX_COL_NUM];
 
@@ -22,7 +26,7 @@ void create_a_tag(int col, int row)
 	static int count = 0;
 	collection_box[count].col_num = col;
 	collection_box[count].row_num = row;
-	collection_box[count++].luggage = 2;
+	collection_box[count++].luggage = 1;
 }
 
 void initialize_collection_box()
@@ -51,7 +55,7 @@ void* ticketing_machine(void *have_luggage)
 	sem_wait(&mutex);
 	// Enqueue into the collection_box array
 	collection_box[count++].luggage = *((int *)have_luggage);
-	printf("Running thread\n");
+	cout<<"Running thread\n";
 	sleep(rand() % 10);
 
 	sem_post(&mutex);
@@ -82,10 +86,10 @@ void create_driver_thread(int num_of_threads)
 	}
 	
 	for (i = 0; i < MAX_COL_NUM * MAX_ROW_NUM; i++)
-		printf("Col: %d, Row: %d, Lugguage: %d\n", collection_box[i].col_num, collection_box[i].row_num, collection_box[i].luggage);
+		cout<<"Col: "<<collection_box[i].col_num<<	"Row: "<<collection_box[i].row_num<<" Lugguage: "<<collection_box[i].luggage<<"\n";
 }
 
-void create_wating_passengers_thread(int num_of_threads)
+void create_waiting_passengers_thread(int num_of_threads)
 {
 	int i;
 	void* result;
@@ -96,19 +100,14 @@ void create_wating_passengers_thread(int num_of_threads)
 	}
 }
 
-int main(int argc, char** argv)
+int main()
 {
 	int coming_passengers;
 	
-	if (argc != 2){
-		fprintf(stderr, "Usage: %s [number of people]\n", argv[0]);
-		fprintf(stderr, "Example: %s 25\n", argv[0]);
-		fprintf(stderr, "In the above example, 25 people will take the couch. 25 threads will be created.\n");
-		return 1;
-	}
-
+	cout<< ">coach " ;
+	cin>>coming_passengers;
+	cout<<"test";
 	sem_init(&mutex, 0, 1);
-	coming_passengers = atoi(argv[1]);
 
 	create_waiting_passengers_thread(coming_passengers);
 
@@ -117,6 +116,8 @@ int main(int argc, char** argv)
 		if (total_num_of_passengers_now > 36)
 			break;
 		sem_post(&mutex);
+		sleep(2);
+		cout<<"testing";
 	} while (1);
 
 	for (;;){
@@ -133,5 +134,5 @@ int main(int argc, char** argv)
 	}
 
 	sem_destroy(&mutex);
-	return 0;
+	
 }
